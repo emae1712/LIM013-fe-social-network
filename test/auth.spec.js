@@ -1,24 +1,23 @@
 import {
   signIn, signInForGoogle, createUser, sendRecoverPass, sendEmail, signOut,
-  currentUser, checkSesionActive,
+  currentUser,
 } from '../src/controller/controller-auth.js';
-
 // setting up firebase mock
 const firebasemock = require('firebase-mock');
 
 const mockauth = new firebasemock.MockAuthentication();
 const mockstorage = new firebasemock.MockStorage();
-// const mockfirestore = new firebasemock.MockFirestore();
+const mockfirestore = new firebasemock.MockFirestore();
 // const mockdatabase = new firebasemock.MockFirebase();
 mockauth.autoFlush();
-mockstorage.ref('location/file');
+mockfirestore.autoFlush();
 
 global.firebase = firebasemock.MockFirebaseSdk(
   // use null if your code does not use RTDB
   () => null,
   () => mockauth,
   () => mockstorage,
-  // () => mockfirestore,
+  () => mockfirestore,
   // () => mockdatabase,
 );
 /* --------------------------funciones de test ----------------------------*/
@@ -75,19 +74,14 @@ describe('Log out', () => {
       expect(user).toBe(undefined);
     }));
 });
+
 // current User
 describe('Verify current user ', () => {
   it('Deberia extraer a usuario logeado', () => {
-    const user = currentUser();
-    if (user) { console.log(user); } else {
-      console.log('fallido');
-    }
-  });
-});
-// observador
-describe('Verify sesion active ', () => {
-  it('Deberia limitar acceso', () => {
-    const chan = () => {};
-    console.log(checkSesionActive(chan));
+    const mockUser = {
+      currentUser: { uid: '001' },
+    };
+    firebase.auth().currentUser = mockUser.currentUser;
+    expect(currentUser().uid).toEqual('001');
   });
 });
