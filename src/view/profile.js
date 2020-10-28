@@ -7,7 +7,7 @@ import { sendImgToStorage } from '../controller/controller-storage.js';
 import { itemPost } from './post.js';
 
 export default (dataCurrentUser) => {
-  /*  const dataCurrentUser = JSON.parse(localStorage.getItem('datauser')); */
+  const userId = currentUser().uid;
   const viewProfile = document.createElement('div');
   viewProfile.classList.add('profile-container');
   viewProfile.innerHTML = `
@@ -95,7 +95,8 @@ export default (dataCurrentUser) => {
   const selectPhotoProfile = viewProfile.querySelector('#select-photo-profile');
   selectPhotoProfile.addEventListener('change', (e) => {
     const file = e.target.files[0];
-    const uploadTask = sendImgToStorage(file, 'SN-imgProfile');
+    const refPath = `SN_imgProfile/${userId}/${file.name}`;
+    const uploadTask = sendImgToStorage(refPath, file);
     const messageProgress = viewProfile.querySelector('#messageProgress');
     const modalProgress = viewProfile.querySelector('.modal-progress');
     const uploader = viewProfile.querySelector('#uploader');
@@ -120,7 +121,8 @@ export default (dataCurrentUser) => {
   const selectCoverPage = viewProfile.querySelector('#select-cover-page');
   selectCoverPage.addEventListener('change', (e) => {
     const file = e.target.files[0];
-    const uploadTask = sendImgToStorage(file, 'SN-imgCover');
+    const refPath = `SN_imgCover/${userId}/${file.name}`;
+    const uploadTask = sendImgToStorage(refPath, file);
     const messageProgress = viewProfile.querySelector('#messageProgress');
     const modalProgress = viewProfile.querySelector('.modal-progress');
     const uploader = viewProfile.querySelector('#uploader');
@@ -165,7 +167,6 @@ export default (dataCurrentUser) => {
   });
   /* -----------------submit modal edit user profile------------------ */
   formEditProfile.addEventListener('submit', (e) => {
-    const userId = currentUser().uid;
     e.preventDefault();
     const usernameEdit = viewProfile.querySelector('#usernameEdit').value;
     const phoneEdit = viewProfile.querySelector('#phoneEdit').value;
@@ -180,7 +181,6 @@ export default (dataCurrentUser) => {
 
   /* ---------------------- ADD POST (CONTAINER-POST)------------------*/
   const containerUserPost = viewProfile.querySelector('.container-user-post');
-  const userId = firebase.auth().currentUser.uid;
   getPosts((post) => {
     containerUserPost.innerHTML = '';
     post.forEach((objPost) => {
