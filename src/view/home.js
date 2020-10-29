@@ -1,3 +1,4 @@
+import { currentUser } from '../controller/controller-auth.js';
 import {
   addPost, getPosts,
 } from '../controller/controller-firestore.js';
@@ -6,7 +7,7 @@ import { itemPost } from './post.js';
 
 export default (dataCurrentUser) => {
   const viewHome = document.createElement('section');
-  const userId = firebase.auth().currentUser.uid;
+  const userId = currentUser().uid;
   viewHome.classList.add('container-home');
   viewHome.innerHTML = `
   <!-- Left column -->
@@ -175,13 +176,14 @@ export default (dataCurrentUser) => {
     removeImg.style.display = 'none';
     // llamar a storage
     const fileImg = e.target.closest('#form-post').querySelector('input').files[0];
+    const refPath = `SN_imgPost/${userId}/${fileImg.name}`;
     const messageProgress = viewHome.querySelector('#messageProgress');
     const modalProgress = viewHome.querySelector('.modal-progress');
     const uploader = viewHome.querySelector('#uploader');
     const privacy = viewHome.querySelector('#privacy-option').value;
     const textPost = viewHome.querySelector('.text-newpost');
     if (fileImg) {
-      const uploadTask = sendImgToStorage(fileImg, 'SN-imgPost');
+      const uploadTask = sendImgToStorage(refPath, fileImg);
       uploadTask.on('state_changed', (snapshot) => {
       // Handle progress
         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
