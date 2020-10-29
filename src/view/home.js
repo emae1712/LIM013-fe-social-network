@@ -176,13 +176,13 @@ export default (dataCurrentUser) => {
     removeImg.style.display = 'none';
     // llamar a storage
     const fileImg = e.target.closest('#form-post').querySelector('input').files[0];
-    const refPath = `SN_imgPost/${userId}/${fileImg.name}`;
     const messageProgress = viewHome.querySelector('#messageProgress');
     const modalProgress = viewHome.querySelector('.modal-progress');
     const uploader = viewHome.querySelector('#uploader');
     const privacy = viewHome.querySelector('#privacy-option').value;
     const textPost = viewHome.querySelector('.text-newpost');
     if (fileImg) {
+      const refPath = `SN_imgPost/${userId}/${fileImg.name}`;
       const uploadTask = sendImgToStorage(refPath, fileImg);
       uploadTask.on('state_changed', (snapshot) => {
       // Handle progress
