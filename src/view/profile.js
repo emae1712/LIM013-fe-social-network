@@ -7,8 +7,8 @@ import { sendImgToStorage } from '../controller/controller-storage.js';
 import { itemPost } from './post.js';
 
 export default (dataCurrentUser) => {
-  const userId = currentUser().uid;
   const viewProfile = document.createElement('div');
+  const userId = currentUser().uid;
   viewProfile.classList.add('profile-container');
   viewProfile.innerHTML = `
   <div class="profile-content">
